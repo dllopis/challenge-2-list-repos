@@ -16,16 +16,17 @@ const client_secret = "5e014d6e1709a03bb5730943187ce87386bc1f51";
 
 const repoData = () =>  {
     fetchUsers(inputValue.value).then((result) =>  {
-        // Rest input field on form and update placeholder message
-
         //Debug helper to see result from fetch
         //console.log(result);
+        
+        document.getElementById("userInput").value = "";
+        document.getElementById("userInput").placeholder = "Search for another GitHub user";
 
         // display GitHub user's full name
         repoOwner.innerHTML= `${result.data.name}`;
 
         //display Message under user's name
-        repoMessage1.innerHTML=  "Browse through my repositories below!";
+        repoMessage1.innerHTML=  "Browse through my recently worked on repositories below!";
         repoMessage2.style.display="none";
 
         // display GitHub username with hyperlink to main-profile
@@ -50,16 +51,21 @@ const fetchRepos = (data) =>    {
         .then(response => response.json())
         .then(data => {
             // Debug helper to see all repositories
-            //console.log(data);
-            
+            // console.log(data); // console log original data before sorting
+
+            // sort our fetched data by recency
+            data.sort(compareValues('pushed_at','desc'));
+
             //holds each repo's info
             var repo = document.querySelector("main.repo-list");
+
             // reset innerHTML from previously shown User
             repo.innerHTML = "";
+
             // iterate throuch each repo
             data.forEach(element => {
                 if(repo) {
-                    // Now render each repo to UI
+                    // Now render each repo to UI and inject values as needed
                     repo.innerHTML += `
                     <div class="row repo">
                         <h3> <a href="${element.html_url}">${element.name}</a> </h3>
@@ -87,29 +93,39 @@ const fetchRepos = (data) =>    {
         })  // end of fetch
 };  // end of fetchRepos
 
-// Execute a function when the user releases a key on the keyboard
-input.addEventListener("keydown", function(event) {
-    // Number 13 is the "Enter" key on the keyboard
-    if (event.keyCode === 13) {
-      // Cancel the default action, if needed
-      event.preventDefault();
-      // Trigger the button element with a click
-      document.getElementById("userSubmitButton").click();
-    }
-  });
-// Execute a function when the user releases a key on the keyboard
-input.addEventListener("keyup", function(event) {
-    if (event.keyCode === 13) {
-        event.preventDefault();
-        document.getElementById("userSubmitButton").click()
-    }
-});
+/*  CREDIT TO THIS SITE FOR HELPING ME FIND A SOLUTION TO SORTING BY RECENCY
+    https://www.sitepoint.com/sort-an-array-of-objects-in-javascript/
+    Allows me to reverse the sorted at the end if argument is passed 'des'
+    default with no second argument is 'asc' order  */
 
-// user clicks on button to start fetching repo
+function compareValues(key, order='asc') {
+    return function(a, b) {
+      if(!a.hasOwnProperty(key) || 
+         !b.hasOwnProperty(key)) {
+          return 0; 
+      }
+      const varA = (typeof a[key] === 'string') ? 
+        a[key].toUpperCase() : a[key];
+      const varB = (typeof b[key] === 'string') ? 
+        b[key].toUpperCase() : b[key];
+        
+      let comparison = 0;
+      if (varA > varB) {
+        comparison = 1;
+      } else if (varA < varB) {
+        comparison = -1;
+      }
+      return ((order == 'desc') ? (comparison * -1) : comparison );
+    };
+  }
+
+  // user clicks on button to start fetching repo
 changeButton.addEventListener("click", () => {
+    event.preventDefault();
     repoData();
 });
-
-document.addEventListener("DOMContentLoaded", function() {
+// This was already here 
+// Not completely sure what it does besides telling me that I was good to go =)
+  document.addEventListener("DOMContentLoaded", function() {
     console.log('document ready');
 });
