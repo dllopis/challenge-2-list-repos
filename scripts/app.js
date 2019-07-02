@@ -3,23 +3,23 @@ const changeButton = document.querySelector(".btn-primary");    //button that su
 var inputValue = document.querySelector(".input-lg");           //username input value
 var navbarTitle = document.querySelector(".navbar-brand");      //navbar title on top of page
 var repoOwner = document.querySelector("div.container h1");     //GitHub username and href link to main-profile
-var repoMessage1 = document.querySelector(".intro-p1")     // Message underneath full name
-var repoMessage2 = document.querySelector(".intro-p2")     // Message underneath full name      
+var repoMessage1 = document.querySelector(".intro-p1")          // Message underneath full name
+var repoMessage2 = document.querySelector(".intro-p2")          // Message underneath full name      
 var repoInfo = document.querySelector("section.container h2");  //h2 element that display GitHub username and href to profile page
-var followers = "";
-var following = "";
+var input = document.getElementById("userInput");               // this is for the eventlistner when user presses enter on form to submit
 
 // Peronalized Tokens to access GitHub-API
 const client_id = "Iv1.2b9b3a65936719ac";
-const client_secret = "0cccb858c12fbfa57668d297826d1eeb430c6cd0";
+const client_secret = "5e014d6e1709a03bb5730943187ce87386bc1f51";
 
 // --- COMPLETED FUNCTIONS ---
 
-// Main function that drives app -- invokes all completed functions --
 const repoData = () =>  {
     fetchUsers(inputValue.value).then((result) =>  {
+        // Rest input field on form and update placeholder message
+
         //Debug helper to see result from fetch
-        //console.log(result);        `
+        //console.log(result);
 
         // display GitHub user's full name
         repoOwner.innerHTML= `${result.data.name}`;
@@ -31,8 +31,6 @@ const repoData = () =>  {
         // display GitHub username with hyperlink to main-profile
         repoInfo.innerHTML = `Showing repos from: <a href=${result.data.html_url}> ${result.data.login} </a>`;
 
-        document.getElementById("input-username").value = "";
-        document.getElementById("input-username").placeholder = "Look for another GitHub user!";
         // Render each repository to UI
         fetchRepos(result.data.repos_url);
         });
@@ -53,42 +51,61 @@ const fetchRepos = (data) =>    {
         .then(data => {
             // Debug helper to see all repositories
             //console.log(data);
-
-            // holds each repo's info
-            var newRepo = document.querySelector("main.repo-list");
-
+            
+            //holds each repo's info
+            var repo = document.querySelector("main.repo-list");
+            // reset innerHTML from previously shown User
+            repo.innerHTML = "";
             // iterate throuch each repo
             data.forEach(element => {
-                // Now render each repo to UI
-                newRepo.innerHTML += `
-                
-                <div class="row repo">
-                    <h3> <a href="${element.html_url}">${element.name}</a> </h3>
-                    <p><strong>Description:</strong> <span>${element.description}</span> </p>
-                    <p><strong>Owner:</strong> <span>${element.owner.login} </span></p>
-                
-                <div class="stats">
-                    <div class="col-sm-1 stars">
-                        <svg class="icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 14 16" width="14">
-                            <use xlink:href="./svg/sprites.svg#star"></use>
-                        </svg>
-                        <span>${element.stargazers_count}</span>
-                    </div>
+                if(repo) {
+                    // Now render each repo to UI
+                    repo.innerHTML += `
+                    <div class="row repo">
+                        <h3> <a href="${element.html_url}">${element.name}</a> </h3>
+                        <p><strong>Description</strong>: <span>${element.description}</span> </p>
+                        <p><strong>Owner</strong>: <span><a href="${element.owner.html_url}"> ${element.owner.login} </a> </span></p>
                     
-                    <div class="col-sm-1 forks">
-                        <svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 10 16" width="10">
-                            <use xlink:href="./svg/sprites.svg#fork"></use>
-                        </svg>
-                        <span>${element.forks}</span>
-                    </div>
-                </div>
-            </div>
-            `
-            }); // end of forEach / styling of repo's
+                        <div class="stats">
+                            <div class="col-sm-1 stars">
+                                <svg class="icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 14 16" width="14">
+                                    <use xlink:href="./svg/sprites.svg#star"></use>
+                                </svg>
+                                <span>${element.stargazers_count}</span>
+                            </div>
+                            
+                            <div class="col-sm-1 forks">
+                                <svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 10 16" width="10">
+                                    <use xlink:href="./svg/sprites.svg#fork"></use>
+                                </svg>
+                                <span>${element.forks}</span>
+                            </div>
+                        </div>
+                    </div>`
+                }
+            }); // end of forEach / styling of repo's                
         })  // end of fetch
 };  // end of fetchRepos
 
-// onclick event to invoke fetch
+// Execute a function when the user releases a key on the keyboard
+input.addEventListener("keydown", function(event) {
+    // Number 13 is the "Enter" key on the keyboard
+    if (event.keyCode === 13) {
+      // Cancel the default action, if needed
+      event.preventDefault();
+      // Trigger the button element with a click
+      document.getElementById("userSubmitButton").click();
+    }
+  });
+// Execute a function when the user releases a key on the keyboard
+input.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("userSubmitButton").click()
+    }
+});
+
+// user clicks on button to start fetching repo
 changeButton.addEventListener("click", () => {
     repoData();
 });
