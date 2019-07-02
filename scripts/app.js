@@ -16,10 +16,12 @@ const client_secret = "5e014d6e1709a03bb5730943187ce87386bc1f51";
 
 const repoData = () =>  {
     fetchUsers(inputValue.value).then((result) =>  {
-        // Rest input field on form and update placeholder message
 
         //Debug helper to see result from fetch
         //console.log(result);
+        
+        document.getElementById("userInput").value = "";
+        document.getElementById("userInput").placeholder = "Search for another GitHub user";
 
         // display GitHub user's full name
         repoOwner.innerHTML= `${result.data.name}`;
@@ -50,7 +52,7 @@ const fetchRepos = (data) =>    {
         .then(response => response.json())
         .then(data => {
             // Debug helper to see all repositories
-            //console.log(data);
+            console.log(data);
             
             //holds each repo's info
             var repo = document.querySelector("main.repo-list");
@@ -87,26 +89,9 @@ const fetchRepos = (data) =>    {
         })  // end of fetch
 };  // end of fetchRepos
 
-// Execute a function when the user releases a key on the keyboard
-input.addEventListener("keydown", function(event) {
-    // Number 13 is the "Enter" key on the keyboard
-    if (event.keyCode === 13) {
-      // Cancel the default action, if needed
-      event.preventDefault();
-      // Trigger the button element with a click
-      document.getElementById("userSubmitButton").click();
-    }
-  });
-// Execute a function when the user releases a key on the keyboard
-input.addEventListener("keyup", function(event) {
-    if (event.keyCode === 13) {
-        event.preventDefault();
-        document.getElementById("userSubmitButton").click()
-    }
-});
-
 // user clicks on button to start fetching repo
 changeButton.addEventListener("click", () => {
+    event.preventDefault();
     repoData();
 });
 
