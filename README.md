@@ -3,7 +3,7 @@ This site displays the github repos for a given user
 sorted by recency.
 
 # My working Proto-type
-https://codecorgi-challenge-1-functional-prototype.netlify.com/
+https://codecorgi-challenge-2-list-repos.netlify.com/
 
 # Issues:
       * #1 use my own html format instead of the boiler-plate provided
