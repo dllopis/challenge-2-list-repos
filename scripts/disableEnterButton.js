@@ -1,4 +1,4 @@
-// disable enter key
+// disable enter key - temporary fix due to keydown spam -
 window.document.onkeydown = CheckEnter;
 
 function CheckEnter(){
