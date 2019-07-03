@@ -28,13 +28,9 @@ changeButton.addEventListener("click", () => {
 });
 
 const runApp = () =>  {
-    if (userInputField.value == "") {
-        userInputField.placeholder = "Invalid input! Try your search again."; 
-        return false;
-      }
     fetchUser(userInputField.value).then((result) =>  {
         // Some error handling for Input form -- Need to implement Regex solution
-        if(result.data.login === undefined) {
+        if(result.data.login === undefined || userInputField.value === "") {
             userInputField.value = "";
             repoInfo.innerHTML = "";
             repoList.innerHTML = "";
