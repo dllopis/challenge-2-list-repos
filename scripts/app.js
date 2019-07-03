@@ -34,15 +34,18 @@ const runApp = () =>  {
             userInputField.value = "";
             repoInfo.innerHTML = "";
             repoList.innerHTML = "";
+            repoOwner.innerHTML = "Request Denied";
+            repoMessage1.innerHTML= "";
+            repoMessage2.innerHTML = "";
             userInputField.placeholder = "Invalid input! Try your search again."; 
             return false;
         }
         // Apply changes to HTML content when user is fetched
         userInputField.value = "";
         userInputField.placeholder = "Search for another GitHub user";        
-        repoOwner.innerHTML= result.data.name;
+        repoOwner.innerHTML = result.data.name;
         repoMessage1.innerHTML=  "Browse through my recently worked on repositories below!"; 
-        repoMessage2.style.display="none";
+        repoMessage2.style.display = "none";
         repoInfo.innerHTML = `Showing repos from: <a href=${result.data.html_url}> ${result.data.login} </a>`;
 
         // Render each repository to UI
