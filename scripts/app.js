@@ -59,7 +59,7 @@ const fetchUser = async (user) =>  {
 };
 
 // Fetch repo list / sort by recency / render call
-const fetchRepos = (data) =>    {
+const fetchRepos = (data) => {
     fetch(data)
         .then(response => response.json())
         .then(data => {
@@ -70,7 +70,7 @@ const fetchRepos = (data) =>    {
 
 /*  CREDIT TO THIS SITE FOR HELPING ME FIND A SOLUTION TO SORTING REPO'S BY RECENCY USING COMPARATORS
     https://www.sitepoint.com/sort-an-array-of-objects-in-javascript/ */
-function compareValues(key, order='asc') {
+let compareValues = (key, order='asc') => {
     return function(a, b) {
         if(!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) { return 0; }
         
@@ -89,42 +89,42 @@ function compareValues(key, order='asc') {
 }
 
 // Output each repository from user to the window
-function renderRepoContent(data)    {
+let renderRepoContent = (data)  =>  {
     //holds each repo's info
     var repo = document.querySelector("main.repo-list");
 
     // reset innerHTML from previously shown User
     repo.innerHTML = "";
     
-// iterate throuch each repo
-data.forEach(element => {
-    console.log(element.updated_at);
-    if(repo) {
-        // Now render each repo to UI and inject values as needed
-        repo.innerHTML += `
-    <div class="row repo">
-        <h3> <a href="${element.html_url}">${element.name}</a> </h3>
-        <p><strong>Description</strong>: <span>${(element.description === null) ? "No description": element.description}</span> </p>
-        <p><strong>Owner</strong>: <span><a href="${element.owner.html_url}"> ${element.owner.login} </a> </span></p>
-    
-        <div class="stats">
-            <div class="col-sm-1 stars">
-                <svg class="icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 14 16" width="14">
-                    <use xlink:href="./svg/sprites.svg#star"></use>
-                </svg>
-                <span>${element.stargazers_count}</span>
+    // iterate throuch each repo
+    data.forEach(element => {
+        //console.log(element.pushed_at);
+        if(repo) {
+            // Now render each repo to UI and inject values as needed
+            repo.innerHTML += `
+        <div class="row repo">
+            <h3> <a href="${element.html_url}">${element.name}</a> </h3>
+            <p><strong>Description</strong>: <span>${(element.description === null) ? "No description": element.description}</span> </p>
+            <p><strong>Owner</strong>: <span><a href="${element.owner.html_url}"> ${element.owner.login} </a> </span></p>
+        
+            <div class="stats">
+                <div class="col-sm-1 stars">
+                    <svg class="icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 14 16" width="14">
+                        <use xlink:href="./svg/sprites.svg#star"></use>
+                    </svg>
+                    <span>${element.stargazers_count}</span>
+                </div>
+                
+                <div class="col-sm-1 forks">
+                    <svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 10 16" width="10">
+                        <use xlink:href="./svg/sprites.svg#fork"></use>
+                    </svg>
+                    <span>${element.forks}</span>
+                </div>
             </div>
-            
-            <div class="col-sm-1 forks">
-                <svg aria-hidden="true" height="16" version="1.1" viewBox="0 0 10 16" width="10">
-                    <use xlink:href="./svg/sprites.svg#fork"></use>
-                </svg>
-                <span>${element.forks}</span>
-            </div>
-        </div>
-    </div>`
-    }
-}); // end of forEach / styling of repo's     
+        </div>`
+        }
+    }); // end of forEach / styling of repo's     
 };
 
 // This was already here 

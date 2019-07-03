@@ -25,6 +25,7 @@ https://codecorgi-challenge-2-list-repos.netlify.com/
 
 # Random Fixes on the spot
 * Description of repo's updated if undefined
+* Refactored all functions to arrow functions for consistency
 
 
 Feel free to update this list, so that I can fix any issues.
